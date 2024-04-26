@@ -28,5 +28,6 @@ if __name__ == "__main__":
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            serialized_answer = detect_intent_text('dvmn-bot-ynkq', event.user_id, event.text)
-            send_answer(serialized_answer['answer'], event.user_id, vk_api)
+            serialized_answer = detect_intent_text('dvmn-bot-ynkq', event.user_id, event.text, flag=True)
+            if serialized_answer is not None:
+                send_answer(serialized_answer['answer'], event.user_id, vk_api)

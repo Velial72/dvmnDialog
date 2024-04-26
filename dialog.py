@@ -1,7 +1,7 @@
 from google.cloud import dialogflow
 
 
-def detect_intent_text(project_id, session_id, message_to_dialogflow, language_code='ru'):
+def detect_intent_text(project_id, session_id, message_to_dialogflow, language_code='ru', flag=False):
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
 
@@ -15,4 +15,8 @@ def detect_intent_text(project_id, session_id, message_to_dialogflow, language_c
         'confidence': response.query_result.intent_detection_confidence,
         'answer': response.query_result.fulfillment_text
     }
-    return serialized_answer
+
+    if response.query_result.intent.is_fallback and flag:
+        return None
+    else:
+        return serialized_answer

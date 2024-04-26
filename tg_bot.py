@@ -30,8 +30,9 @@ async def process_help_command(message: Message):
 
 @dp.message()
 async def send_answer(message: Message):
-    serialized_answer = detect_intent_text('dvmn-bot-ynkq', message.from_user.id, message.text)
-    await bot.send_message(chat_id=message.chat.id, text=serialized_answer['answer'])
+    serialized_answer = detect_intent_text('dvmn-bot-ynkq', message.from_user.id, message.text, flag=False)
+    if serialized_answer is not None:
+        await bot.send_message(chat_id=message.chat.id, text=serialized_answer['answer'])
 
 
 if __name__ == '__main__':
