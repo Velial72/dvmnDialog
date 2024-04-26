@@ -4,6 +4,8 @@ import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
 from environs import Env
 
+from dialog import detect_intent_text
+
 
 env = Env()
 env.read_env()
@@ -11,10 +13,10 @@ env.read_env()
 VK_TOKEN = env('VK_TOKEN')
 
 
-def echo(event, vk_api):
+def send_answer(answer, user_id, vk_api):
     vk_api.messages.send(
-        user_id=event.user_id,
-        message=event.text,
+        user_id=user_id,
+        message=answer,
         random_id=random.randint(1,1000)
     )
 
@@ -26,4 +28,5 @@ if __name__ == "__main__":
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            echo(event, vk_api)
+            serialized_answer = detect_intent_text('dvmn-bot-ynkq', event.user_id, event.text)
+            send_answer(serialized_answer['answer'], event.user_id, vk_api)
